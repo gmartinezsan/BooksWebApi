@@ -35,7 +35,7 @@ namespace BooksWebApi.Controllers
 
         // GET: api/Book/5
         [HttpGet("{id}", Name = "BookGet")]
-        public IActionResult Get(int id)
+        public IActionResult Get(int id) 
         {
 					try
 					{
@@ -51,20 +51,30 @@ namespace BooksWebApi.Controllers
         // POST: api/Book
         [HttpPost]
    //     [Authorize]
-        public async Task<IActionResult> Post([FromBody]Book model)
+        public async Task<IActionResult> Post([FromBody]AddBookModel model)
         {
           try
           {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            _repository.Add(model);
+            var book = new Book
+            {
+              Name = model.Name,
+              AuthorName = model.AuthorName,
+              Edition = model.Edition,
+              PublicationDate = model.PublicationDate,
+              ISDN = model.ISDN,
+              Category = _repository.GetCategoryWithBooks(model.CategoryId)
+            };
+            
+            _repository.Add(book);
             if (await _repository.SaveAllAsync())
             {
-              var newUri = Url.Link("BookGet", new { id = model.Id });
-              return Created(newUri, model);
+              var newUri = Url.Link("BookGet", new { id = book.Id });
+              return Created(newUri, book);
             }
           }
-          catch (Exception)
-          { }
+          catch (Exception ex)
+          { Console.Write(ex.Message); }
           return BadRequest("Could not post Book");
         }
         
