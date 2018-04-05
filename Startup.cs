@@ -1,10 +1,14 @@
-﻿using BooksWebApi.Data;
+﻿using AutoMapper;
+using BooksWebApi.Data;
+using BooksWebApi.Entities;
+using BooksWebApi.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-
+using Microsoft.Extensions.Logging;
 
 namespace BooksWebApi
 {
@@ -26,12 +30,19 @@ namespace BooksWebApi
       public void ConfigureServices(IServiceCollection services)
       {
 					services.AddDbContext<BooksCatalogDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-          services.AddMvc();
-      }
+			    services.AddScoped<ICrudRepository, CrudRepository>()
+							.AddIdentity<User, IdentityRole>()
+							.AddEntityFrameworkStores<BooksCatalogDbContext>()
+							.AddDefaultTokenProviders();
+              
+			    services.AddAutoMapper();
+          services.AddMvc()
+          .AddJsonOptions(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+    }
 
-      // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-      public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-      {
+		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.		
+	  public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+		{
 					if (env.IsDevelopment())
 					{
 						app.UseDeveloperExceptionPage();
@@ -40,9 +51,10 @@ namespace BooksWebApi
 					else
 					{
 						app.UseExceptionHandler("/Error");
-					}
+					}			
 
-				app.UseMvc();
+					app.UseAuthentication();					
+					app.UseMvc();			  
       }
    }
 }

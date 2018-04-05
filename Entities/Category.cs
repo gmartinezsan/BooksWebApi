@@ -7,8 +7,8 @@ namespace BooksWebApi.Entities
 {
     public class Category
     {
-			public long Id { get; set; }
+			public int Id { get; set; }
 			public string Description { get; set; }
-      public List<Book>Books { get; set; }
+      public ICollection<Book>Books { get; set; }
 	}
 }

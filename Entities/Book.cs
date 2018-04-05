@@ -7,7 +7,7 @@ namespace BooksWebApi.Entities
 {
 	public class Book
 	{
-		public long Id { get; set; }
+		public int Id { get; set; }
 		public string Name { get; set; }
 		public string AuthorName { get; set; }
 		public int Edition { get; set; }
