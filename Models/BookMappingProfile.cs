@@ -14,6 +14,9 @@ namespace BooksWebApi.Models
 					CreateMap<Book, BookModel>()
           .ForMember(b => b.category, opt => opt.ResolveUsing(c => c.Category.Description))
           .ReverseMap();
-				}
+
+          CreateMap<Book, UpdateBookModel>()      
+          .ReverseMap();
+        }
 		}
 }

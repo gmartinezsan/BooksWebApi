@@ -25,6 +25,11 @@ namespace BooksWebApi.Data
       .WithMany(c => c.Books)
       .IsRequired();
 
+      builder.Entity<Category>()
+        .HasMany(c => c.Books)
+        .WithOne(e => e.Category)
+        .OnDelete(DeleteBehavior.SetNull);
+
       base.OnModelCreating(builder);
     }
   }

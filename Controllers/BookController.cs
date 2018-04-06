@@ -80,23 +80,26 @@ namespace BooksWebApi.Controllers
         
         // PUT: api/Book/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody]BookModel model)
+        public async Task<IActionResult> Put(int id, [FromBody]UpdateBookModel model)
         {
+            string error = "";
             try
             {
               if (!ModelState.IsValid) return BadRequest(ModelState);
               var oldBook = _repository.GetBook(id);
-              if (oldBook == null) return NotFound($"Couldn't find a book of {id}");
-              _mapper.Map(model, oldBook);
-
+              if (oldBook == null) return NotFound($"Couldn't find a book of {id}");                   
+              model.category = oldBook.Category;
+              _mapper.Map(model, oldBook);              
               if (await _repository.SaveAllAsync())
               {
-                return Ok(_mapper.Map<BookModel>(oldBook));
+                return Ok(_mapper.Map<UpdateBookModel>(oldBook));
               }
             }
-            catch (Exception)
-            { }
-            return BadRequest("Could not update book");
+            catch (Exception e)
+            {
+               error = e.Message;            
+            }
+            return BadRequest(string.Format("Could not update book: {0}", error));
         }
         
         // DELETE: api/ApiWithActions/5
