@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BooksWebApi.Models
 {
@@ -12,5 +9,5 @@ namespace BooksWebApi.Models
       public int Edition { get; set; }
       public DateTime PublicationDate { get; set; }
       public string ISDN { get; set; }    
-  }
+    }
 }

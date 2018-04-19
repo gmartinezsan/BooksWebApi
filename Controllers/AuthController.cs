@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using BooksWebApi.Data;
 using BooksWebApi.Entities;
@@ -13,33 +11,33 @@ namespace BooksWebApi.Controllers
 {
   public class AuthController : Controller
   {
-		private BooksCatalogDbContext _context;
-		private SignInManager<User> _signInMgr;
-		private ILogger<AuthController> _logger;
+    private BooksCatalogDbContext _context;
+    private SignInManager<User> _signInMgr;
+    private ILogger<AuthController> _logger;
 
-		public AuthController(BooksCatalogDbContext context, SignInManager<User> signInMgr, ILogger<AuthController> logger)
-		{
-			_context = context;
-			_signInMgr = signInMgr;
-			_logger = logger;
-		}
+    public AuthController(BooksCatalogDbContext context, SignInManager<User> signInMgr, ILogger<AuthController> logger)
+    {
+	    _context = context;
+	    _signInMgr = signInMgr;
+	    _logger = logger;
+    }
 
-		[HttpPost("api/Auth/login")]
-		public async Task<IActionResult> Login([FromBody] LoginModel model)
-		{
-			try
-			{
-				var result = await _signInMgr.PasswordSignInAsync(model.UserName, model.Password, false, false);
-				if (result.Succeeded)
-				{
-					return Ok();
-				}
-			}
-			catch (Exception ex)
-			{
-				_logger.LogError($"an Exception is thrown while logging in {ex}");
-			}
-			return BadRequest("Failed to login");
-		}
-	}
+    [HttpPost("api/Auth/login")]
+    public async Task<IActionResult> Login([FromBody] LoginModel model)
+    {
+	    try
+	    {
+		    var result = await _signInMgr.PasswordSignInAsync(model.UserName, model.Password, false, false);
+		    if (result.Succeeded)
+		    {
+			    return Ok();
+		    }
+	   }
+     catch (Exception ex)
+	   {
+       _logger.LogError($"an Exception is thrown while logging in {ex}");
+	   }
+	   return BadRequest("Failed to login");
+  }
+ }
 }
